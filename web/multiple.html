@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Dynamic Load</title>
+    <meta http-equiv="Content-Language" content="en-us">
+
+    <!-- Dynamic CSS library -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+
+    <!-- Dark mode -->
+    <script src="https://cdn.jsdelivr.net/npm/darkmode-js@1.5.7/lib/darkmode-js.min.js"></script>
+    <script>
+        function addDarkmodeWidget() {
+            new Darkmode().showWidget();
+        }
+        window.addEventListener('load', addDarkmodeWidget);
+    </script>
+
+    <!-- Tableau -->
+    <script type="text/javascript" src="https://public.tableau.com/javascripts/api/tableau-2.min.js"></script>
+    <script type="text/javascript">
+        var vizList = [
+            "http://public.tableau.com/views/map_16664335232200/Dashboard1",
+            "http://public.tableau.com/views/Dashboard1_16664219684290/Dashboard1",
+            "http://public.tableau.com/views/direction_16664239718690/Dashboard1",
+            "http://public.tableau.com/views/A3New/Dashboard1",
+            "http://public.tableau.com/views/iv_a3/RHO_Analysis"];
+
+        var viz,
+            vizLen = vizList.length,
+            vizCount = 0;
+
+        function createViz(vizPlusMinus) {
+            var vizDiv = document.getElementById("vizContainer"),
+                options = {
+                    hideTabs: true
+                };
+
+            vizCount = vizCount + vizPlusMinus;
+
+            if (vizCount >= vizLen) {
+                // Keep the vizCount in the bounds of the array index.
+                vizCount = 0;
+            } else if (vizCount < 0) {
+                vizCount = vizLen - 1;
+            }
+
+            if (viz) { // If a viz object exists, delete it.
+                viz.dispose();
+            }
+            var vizURL = vizList[vizCount];
+            viz = new tableau.Viz(vizDiv, vizURL, options);
+        }
+    </script>
+
+    <style>
+        .animate__animated.animate__pulse {
+            /* animation-duration: 1s; */
+            text-align: center;
+            /* color: #000; */
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        .data {
+            text-align: center;
+        }
+
+        /* .tableau_container {
+            border: 1px solid black;
+        } */
+
+        #vizContainer {
+            width: 1600px;
+            height: 900px;
+            margin: 0 auto;
+        }
+
+        #controls {
+            padding: 30px;
+            position: absolute;
+            left: 70%;
+            /* border: 1px solid black; */
+        }
+
+        .tab_button {
+            /* font-family: "Open Sans", sans-serif; */
+            font-size: 16px;
+            letter-spacing: 2px;
+            text-decoration: none;
+            text-transform: uppercase;
+            color: #000;
+            cursor: pointer;
+            border: 3px solid;
+            padding: 0.25em 0.5em;
+            box-shadow: 1px 1px 0px 0px, 2px 2px 0px 0px, 3px 3px 0px 0px, 4px 4px 0px 0px, 5px 5px 0px 0px;
+            position: relative;
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: manipulation;
+            margin: 0 10px;
+        }
+
+        .tab_button:hover {
+            color: #fff;
+            background: #000;
+        }
+
+        .tab_button:active {
+            box-shadow: 0px 0px 0px 0px;
+            top: 5px;
+            left: 5px;
+        }
+
+        /* .vue[data-v-title] {
+            
+        } */
+
+        .disclaimer {
+            text-align: center;
+            margin-top: 120px;
+            margin-bottom: 50px;
+        }
+    </style>
+</head>
+
+<body onload="createViz(0);">
+    <h1 class="vueTitle" data-v-title>{{ title }}</h1>
+    <h4 class="vueSubTitle animate__animated animate__pulse animate__repeat-2 animate__delay-2s"> <a
+            title="Ruoyi Gan; Xizhe Lin; Nuoda Yang; Mingcheng Fu">{{ subtitle }}</a></h4>
+
+    <div class="data">
+        <a href="https://discover.data.vic.gov.au/dataset/bicycle-volume-and-speed" target="_blank"
+            style="margin-right: 10px;">Data source</a>
+        <a href="https://data.vicroads.vic.gov.au/metadata/VicRoads%20Bicycle%20Volume%20and%20Speed%20Data.html"
+            target="_blank">
+            Meta data</a>
+    </div>
+
+    <!-- Vue -->
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script>
+        const { createApp } = Vue
+
+        createApp({
+            data() {
+                return {
+                    title: "A Dynamic Bicycle Report in Melbourne CBD in 2022",
+                }
+            },
+        }).mount('.vueTitle')
+
+        createApp({
+            data() {
+                return {
+                    subtitle: "Presented by GEOM90008 Group 96",
+                }
+            },
+        }).mount('.vueSubTitle')
+    </script>
+
+    <div class="tableau_container">
+        <div id="vizContainer"></div>
+        <div id="controls">
+            <button class="tab_button" onclick="javascript:createViz(-1);">Previous</button>
+            <button class="tab_button" onclick="javascript:createViz(1);">Next</button>
+        </div>
+    </div>
+
+    <div class="disclaimer">
+        <h3>Disclaimer:</h3>
+        <p>This page can be used and should only be used by the members at the University of Melbourne</p>
+        <p>We acknowledge and pay respect to the Traditional Owners of the lands upon which our campuses are
+            situated
+        </p>
+    </div>
+</body>
+
+</html>
